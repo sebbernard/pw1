@@ -1,32 +1,59 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <form
+  @submit="checkForm"
+>
+  <p>
+    <label for="username">email: </label>
+    <input
+      id="username"
+      v-model="username"
+      type="text"
+      name="username"
+    >
+  </p>
+
+  <p>
+    <label for="password">password: </label>
+    <input
+      id="password"
+      v-model="password"
+      type="text"
+      name="password"
+    >
+  </p>
+
+  <p>
+    <input
+      type="submit"
+      value="Submit"
+    >
+  </p>
+
+</form>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+export default {
+  data () {
+    return {
+      postBody: '',
+      errors: []
+    }
+  },
+  formSubmit () {
+    const postObj = this
+    this.axios.post('http://localhost:3000/api/v1/login',
+      {
+        username: this.username,
+        password: this.password
+      })
+      .then(function (response) {
+        postObj.output = response.data
+        console.log(postObj.output.code)
+      })
+      .catch(function (error) {
+        postObj.output = error
+      })
+  }
 }
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+</script>
